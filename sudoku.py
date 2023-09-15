@@ -1,42 +1,40 @@
 import pygame
 import random
 from collections import Counter 
-starting_nums = []
-track = []
-ctn = False
-used = []
-colNum = None #used to detect which row 
-rowNum = None	
-good = True
-check = True
-rows_confirm = False
-columns_confirm = False
-c = 0
-plop = []
-used_total = []
-banned = []
-banned2 = []
-plop2 = []
-alt = True
-clop = 0
-coords = {}
-y = 0
-x = 0
-val = 1
-pair = True
-row_count = 0
-ini = 1
-inc = 1
-prev = []
-leave = None
-weird = [1,2,3,4,5,6,7,8,9]
-weird_count = 0
-dp = {}
+starting_nums = [] # position of the numbers that are given
+track = [] # list to prevent starting nums from being in a square
+ctn = False # checks to see if we need to continue to check if we repeat a number in columns after rows was checked
+used = [] # used numbers for a square, resets
+colNum = None # used to detect which col 
+rowNum = None # used to detect whcih row
+good = True # confirms that we can put the chosen number between 1-9 in its position
+check = True # verifies final condition of the game
 
-pected = [3, 2, 1, 2, 3, 2, 1, 2, 1]
-ex = pected[0]
-returned = None
-for _ in range(81):
+
+c = 0
+plop = [] # helps with choosing starting nums
+used_total = [] # every position used
+banned = [] # prevents numbers used twice in a row
+banned2 = [] # prevents numbers used twice in a col
+plop2 = [] # helps with choosing starting nums
+clop = 0 # square number for starting nums
+coords = {} # coordinate in the form of (col, row) for every position and its value associated
+y = 0 #starting coords
+x = 0
+val = 1 # variable used to make coords
+ini = 1 # number the sudoku solver is inserting
+inc = 1 # position the sudoku solver is at
+prev = [] # previous squares the sudoku solver can go to (backtracking)
+leave = None # special case for backtracking, helps us avoid error
+weird = [1,2,3,4,5,6,7,8,9] # if no options are left for backtracking
+weird_count = 0 # how many times it's happened
+dp = {} # value for every position (easier to navigate than coords)
+
+pected = [3, 2, 1, 2, 3, 2, 1, 2, 1] # how many given numbers for each square
+ex = pected[0] # initialising the amount of given positions for a square
+returned = None # if we are backtracking, this will change to True
+
+for _ in range(81): # makes coords
 
 	coords[(x,y)] = val
 	val += 1
@@ -46,12 +44,12 @@ for _ in range(81):
 		y+=1    # (0,1) = 9
 		
 
-#print(coords)
 
 
 
 
-def changColor(image, color):
+
+def changColor(image, color): # changes color for given squares
     colouredImage = pygame.Surface(image.get_size())
     colouredImage.fill(color)
     
@@ -59,7 +57,7 @@ def changColor(image, color):
     finalImage.blit(colouredImage, (0, 0), special_flags = pygame.BLEND_MULT)
     return finalImage
 
-def sample(l):
+def sample(l): # gives us the position for given nums
 	global c, plop
 	while True:
 		
@@ -116,10 +114,10 @@ def sample(l):
 					plop.remove(column)
 		
 		if v in banned or p in banned:
-			#print(v)
+			
 			con = False
 		if con == True:
-			#print("hi", v)
+		
 			c +=1
 			used.append(i)
 			starting_nums.append(l[i])
@@ -127,25 +125,25 @@ def sample(l):
 	c=0
 start = True
 
-def lazy(start):
+def lazy(start): # function that makes dictionary with the position for every column. We make one for column 0, 1, 2, etc.
 	l = {start: None, }
 	for x in range(8):
 		l[next(reversed(l.keys()))+9] = None
 	return l
 
-def lazy2(start):
+def lazy2(start): # function that makes a list for all rows
 	l = []
 	for x in range(9):
 		l.append(x+start)
 	return l
 
-def lazy3(start):
+def lazy3(start): # function that makes a list for all columns
 	l = [start]
 	for x in range(8):
 		l.append(l[-1]+9)
 	return l
 
-def square_maker(start):
+def square_maker(start): # function that makes list for every position in a square
 	d = {}
 	for x in range(9):
 		d[start] = None
@@ -156,7 +154,7 @@ def square_maker(start):
 	return d
 
 
-def violation(row,col,square):
+def violation(row,col,square): # checks if there is a violation after we place a number in a col, row and square. returns True if there is
 	verf = []
 	for x in row.values():
 		if x != None:
@@ -227,9 +225,11 @@ square8 = [58,59,60,67,68,69,76,77,78]
 square9 = [61,62,63,70,71,72,79,80,81]
 starting_nums = []
 
-squares = [square1, square2, square3, square4, square5, square6, square7, square8, square9]
-squares_dict = [square_maker(1), square_maker(4), square_maker(7), square_maker(28), square_maker(31), square_maker(34), square_maker(55), square_maker(58), square_maker(61)]
-#print(squares_dict[5])
+squares = [square1, square2, square3, square4, square5, square6, square7, square8, square9] # List with position of every square
+squares_dict = [square_maker(1), square_maker(4), square_maker(7), square_maker(28), square_maker(31), square_maker(34), square_maker(55), square_maker(58), square_maker(61)] # position of squares with values
+#coul've used the keys from the squares_dict, but it was an oversight
+
+
 # ROWS
 
 row1 = {}
@@ -270,9 +270,9 @@ for x in range(9):
 
 rows = [lazy2(1),lazy2(10),lazy2(19),lazy2(28),lazy2(37),lazy2(46),lazy2(55),lazy2(64),lazy2(73)]
 rows_dict = [row1,row2,row3,row4,row5,row6,row7,row8,row9]
-#print(rows[8])
+
 # COLUMNS
-#print(rows_dict[0])
+
 
 column1 = lazy(1)
 column2 = lazy(2)
@@ -286,25 +286,23 @@ column9 = lazy(9)
 
 columns = [lazy3(1),lazy3(2),lazy3(3),lazy3(4),lazy3(5),lazy3(6),lazy3(7),lazy3(8),lazy3(9)]
 columns_dict = [column1,column2,column3,column4,column5,column6,column7, column8,column9]
-#print(columns[8])
-#print(column1)
 
+
+# MAKING STARTING NUMS
 
 for x in range(9):
 	clop += 1
-	if float(x//2) == float(x/2):
-		alt = True
-	else:
-	 	alt = False
+	
 	sample(squares[x])
 starting_nums_COPY = [x for x in starting_nums]
-#print(starting_nums_COPY)
+
+# END
 
 
 used = []
 counts = -1
 done = False
-#function for the sprites of the game which are just each individual square
+#function for the sprites of the game which are just each individual position
 class Sprite(pygame.sprite.Sprite):
 	def __init__(self, color, height, width):
 		pygame.sprite.Sprite.__init__(self)
@@ -315,8 +313,8 @@ class Sprite(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 	def update(self):
 		global counts, done, ctn, ex, used, num
-		#print(starting_nums_COPY)
-		if start == True:
+		
+		if start == True: # starting function, just setting up the starting nums and choosing an appropriate value to insert
 			while True:
 				lol = random.randrange(0,8)
 				
@@ -328,7 +326,7 @@ class Sprite(pygame.sprite.Sprite):
 				
 				used_total.append(lol)
 				if counts == ex:
-					print(used)
+					
 					
 					used.clear()
 				
@@ -341,21 +339,17 @@ class Sprite(pygame.sprite.Sprite):
 				else:
 					good = True
 
-					# (list(Counter(list(d.values())).values()))
-				
-				#for y in (list(Counter(list(rows_dict[x].values())).values())):
+					
 				
 				for x in range(len(rows)):
 					if starting_nums[i] in rows[x]:
 						if lol+1 in list(rows_dict[x].values()):
-							#print(x, "hi")
-							#print(rows_dict[x])
-							#print(lol)
+							
 							good = False
 							used_total.pop()
 							ctn = True
 							break
-						#rows_dict[x][starting_nums[i]-1] = lol
+						
 						good = True
 						ctn = False
 						break
@@ -367,7 +361,7 @@ class Sprite(pygame.sprite.Sprite):
 								used_total.pop()
 								ctn = False
 								break
-							#columns_dict[x][starting_nums[i]-1] = lol
+							
 							good = True
 							break
 				for x in list(Counter(used_total).values()):
@@ -376,7 +370,7 @@ class Sprite(pygame.sprite.Sprite):
 						used_total.pop()
 						break
 
-				if good == True:
+				if good == True: 
 					color = (0,0,255)
 					self.image = changColor(imgs[lol], color)
 					for x in range(len(rows)):
@@ -408,7 +402,7 @@ class Sprite(pygame.sprite.Sprite):
 		num = nums
 		
 		
-		if num == 32:
+		if num == 32: # codes for every click to change the value of the position
 			self.image = white
 			columns_dict[paps1][balls] = None
 			rows_dict[paps][balls] = None
@@ -451,7 +445,7 @@ class Sprite(pygame.sprite.Sprite):
 			rows_dict[paps][balls] = 9
 		
 
-
+# Setting up the screen (not monitor screen sensitive)
 pygame.init()
 rectx = 3.5
 columns_sprite = pygame.sprite.Group()
@@ -508,7 +502,7 @@ for x in range(81):	#making a sprite for each individual square
 
 #we need to add 3 random numbers to each square START:
 counts2 = 0
-print(starting_nums)
+
 starting = pygame.sprite.Group()
 for x in range(len(starting_nums)):
 	starting.add(all_sprites_list.sprites()[starting_nums[x]-1])
@@ -519,7 +513,7 @@ for x in range(len(starting_nums)):
 		if counts2 != 8:
 			counts2+= 1
 		counts = 0
-		print(counts2)
+	
 		
 		ex = pected[counts2]
 	starting = pygame.sprite.Group()
@@ -533,7 +527,8 @@ start = False
 
 
 while run:
-	for column in columns_dict:
+	#CHECKING IF GAME IS COMPLETED
+	for column in columns_dict: 
 		for x in Counter(column.values()).values():
 			if x != 1:
 				check = False
@@ -555,8 +550,10 @@ while run:
 		row_confirm = True	
 	check = True	
 	if row_confirm == True and columns_confirm == True:
-		print("CONGRATS")
+		
 		exit()
+	# END
+
 
 	for event in pygame.event.get(): #exit loop
 		if event.type == pygame.QUIT:
@@ -613,37 +610,39 @@ while run:
 			for s in range(9):
 				if rows_sprite.sprites()[s].rect.collidepoint(pos):
 					paps = s
-					#print(f"row {s}")
+					
 					break
 			for s in range(9):
 				if columns_sprite.sprites()[s].rect.collidepoint(pos):
-					#print(f"column {s}")
+					
 					paps1 = s
 					break
-			#print(paps1,paps)
+			
+
 
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_SPACE or event.key == pygame.K_0 or event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or event.key == pygame.K_7 or event.key == pygame.K_8 or event.key == pygame.K_9:
 				clicked_sprites.update()
 				clicked_sprites = pygame.sprite.Group()
-				#print(event.key)
+
+		# If p is pressed, then the sudoku solver starts		
 			if event.key == pygame.K_p:
 				while True:
 					
 					
 					ini = 1
-					if inc not in starting_nums:
+					if inc not in starting_nums: # making sure we don't modify a starting position
 						
 						while True:
-							if ini == 10:
+							if ini == 10: # ini is = 10 only if we ran out of options, then we backtrack
 								returned = True
 								columns_dict[c][inc] = None
 								rows_dict[r][inc] = None
 								squares_dict[s][inc] = None
-								print(prev)
-								#if len(prev) != 0:
+								
+								
 								try:
-									inc = prev[-1]
+									inc = prev[-1] 
 									prev.pop()
 								except:
 									columns_dict[c][inc] = weird[weird_count]
@@ -652,12 +651,12 @@ while run:
 									weird_count += 1
 									
 								break
-							
+							# tries a number in every position
 							for y in range(len(columns_dict)):
 								if inc in columns[y]:
 									if returned == True:
 										if columns_dict[y][inc] == 9:
-											print('jeez')
+											
 											columns_dict[c][inc] = None
 											rows_dict[r][inc] = None
 											squares_dict[s][inc] = None
@@ -691,32 +690,32 @@ while run:
 
 							
 								
-							if violation(rows_dict[r], columns_dict[c], squares_dict[s]) == False and ini != 10:
-								print(ini)
+							if violation(rows_dict[r], columns_dict[c], squares_dict[s]) == False and ini != 10: # if placing the number is ok, this runs
+								
 								dp[inc] = ini
 								break
-							elif ini != 10:
-								print('cum', ini)
+							elif ini != 10: # otherwise, we try a larger number
+								
 								ini += 1
 
 					if returned == True:
-						print('hey', ini)
-					if returned != True and inc not in starting_nums:
+						
+					if returned != True and inc not in starting_nums: # keeping track of each previous position
 						
 						prev.append(inc)
-					if returned != True:
-						inc += 1	#problem is here when returned is True
+					if returned != True: # incrementing the position by 1 every time
+						inc += 1	
 					ini = 1
-					if inc == 82:
-						print("nice")
-						print(rows_dict[8])
+					if inc == 82: # when inc is 82, it's over, the rest of the code displays the solved sudoku
+						
+						
 						sprites_needed = pygame.sprite.Group()
-						print(dp)
+						
 						paps1, paps = 1,1
 						for x in range(81):
 							if (x+1) not in starting_nums and x != 81:
 								sprites_needed.add(all_sprites_list.sprites()[x])
-								print(sprites_needed)
+								
 								if dp[x+1] == 1:
 									nums = 49
 
@@ -727,8 +726,7 @@ while run:
 									nums = 50
 									sprites_needed.update()
 									sprites_needed = pygame.sprite.Group()
-									deez = "goofy"
-									print('sasasdas')
+									
 									continue
 									
 								if dp[x+1] == 3:
@@ -768,7 +766,7 @@ while run:
 									continue
 								
 								
-								print(x+1)
+								
 								
 								
 								
