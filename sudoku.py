@@ -29,7 +29,9 @@ ini = 1
 inc = 1
 prev = []
 leave = None
-
+weird = [1,2,3,4,5,6,7,8,9]
+weird_count = 0
+dp = {}
 
 pected = [3, 2, 1, 2, 3, 2, 1, 2, 1]
 ex = pected[0]
@@ -312,7 +314,7 @@ class Sprite(pygame.sprite.Sprite):
 		
 		self.rect = self.image.get_rect()
 	def update(self):
-		global counts, done, ctn, ex, used
+		global counts, done, ctn, ex, used, num
 		#print(starting_nums_COPY)
 		if start == True:
 			while True:
@@ -403,7 +405,7 @@ class Sprite(pygame.sprite.Sprite):
 		num = event.key
 		
 		balls = coords[(paps1,paps)]	
-		
+		num = nums
 		
 		
 		if num == 32:
@@ -418,7 +420,7 @@ class Sprite(pygame.sprite.Sprite):
 			self.image = two
 			columns_dict[paps1][balls] = 2
 			rows_dict[paps][balls] = 2
-			print(columns_dict[paps1])
+			
 		if num == 51:
 			self.image = three
 			columns_dict[paps1][balls] = 3
@@ -629,7 +631,7 @@ while run:
 				while True:
 					
 					
-
+					ini = 1
 					if inc not in starting_nums:
 						
 						while True:
@@ -639,9 +641,16 @@ while run:
 								rows_dict[r][inc] = None
 								squares_dict[s][inc] = None
 								print(prev)
-								inc = prev[-1]
-								prev.pop()
-								
+								#if len(prev) != 0:
+								try:
+									inc = prev[-1]
+									prev.pop()
+								except:
+									columns_dict[c][inc] = weird[weird_count]
+									rows_dict[r][inc] = weird[weird_count]
+									squares_dict[s][inc] = weird[weird_count]
+									weird_count += 1
+									
 								break
 							
 							for y in range(len(columns_dict)):
@@ -652,8 +661,14 @@ while run:
 											columns_dict[c][inc] = None
 											rows_dict[r][inc] = None
 											squares_dict[s][inc] = None
-											inc = prev[-1]
-											prev.pop()
+											try:
+												inc = prev[-1]
+												prev.pop()
+											except:
+												columns_dict[c][inc] = weird[weird_count]
+												rows_dict[r][inc] = weird[weird_count]
+												squares_dict[s][inc] = weird[weird_count]
+												weird_count += 1
 											leave = True
 											returned = True
 											break
@@ -665,6 +680,7 @@ while run:
 								leave = False
 								break
 							for y in range(len(rows_dict)):
+
 								if inc in rows[y]:
 									rows_dict[y][inc] = ini
 									r=y
@@ -677,6 +693,7 @@ while run:
 								
 							if violation(rows_dict[r], columns_dict[c], squares_dict[s]) == False and ini != 10:
 								print(ini)
+								dp[inc] = ini
 								break
 							elif ini != 10:
 								print('cum', ini)
@@ -690,9 +707,73 @@ while run:
 					if returned != True:
 						inc += 1	#problem is here when returned is True
 					ini = 1
-					if inc == 81:
+					if inc == 82:
 						print("nice")
-						print(rows_dict[4])
+						print(rows_dict[8])
+						sprites_needed = pygame.sprite.Group()
+						print(dp)
+						paps1, paps = 1,1
+						for x in range(81):
+							if (x+1) not in starting_nums and x != 81:
+								sprites_needed.add(all_sprites_list.sprites()[x])
+								print(sprites_needed)
+								if dp[x+1] == 1:
+									nums = 49
+
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								if dp[x+1] == 2:
+									nums = 50
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									deez = "goofy"
+									print('sasasdas')
+									continue
+									
+								if dp[x+1] == 3:
+									nums = 51
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								if dp[x+1] == 4:
+									nums = 52
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								if dp[x+1] == 5:
+									nums = 53
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								if dp[x+1] == 6:
+									nums = 54
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								if dp[x+1] == 7:
+									nums = 55
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								if dp[x+1] == 8:
+									nums = 56
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								if dp[x+1] == 9:
+									nums = 57
+									sprites_needed.update()
+									sprites_needed = pygame.sprite.Group()
+									continue
+								
+								
+								print(x+1)
+								
+								
+								
+							sprites_needed = pygame.sprite.Group()
+
 						break
 		
 
