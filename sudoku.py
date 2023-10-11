@@ -26,8 +26,8 @@ ini = 1 # number the sudoku solver is inserting
 inc = 1 # position the sudoku solver is at
 prev = [] # previous squares the sudoku solver can go to (backtracking)
 leave = None # special case for backtracking, helps us avoid error
-weird = [1,2,3,4,5,6,7,8,9] # if no options are left for backtracking
-weird_count = 0 # how many times it's happened
+
+
 dp = {} # value for every position (easier to navigate than coords)
 
 pected = [3, 2, 1, 2, 3, 2, 1, 2, 1] # how many given numbers for each square
@@ -639,51 +639,45 @@ while run:
 								columns_dict[c][inc] = None
 								rows_dict[r][inc] = None
 								squares_dict[s][inc] = None
-								
-								
-								try:
-									inc = prev[-1] 
-									prev.pop()
-								except:
-									columns_dict[c][inc] = weird[weird_count]
-									rows_dict[r][inc] = weird[weird_count]
-									squares_dict[s][inc] = weird[weird_count]
-									weird_count += 1
-									
+								print(prev)
+								inc = prev[-1]
+								prev.pop()
 								break
+							if returned == True:
+								for y in range(len(columns_dict)):
+									if inc in columns[y]:
+										c = y
+								for y in range(len(rows_dict)):
+									if inc in rows[y]:
+										r=y
+								for y in range(len(squares_dict)):
+									if inc in squares[y]:
+										s=y
+								if rows_dict[r][inc] == 9:
+									returned = True
+									columns_dict[c][inc] = None
+									rows_dict[r][inc] = None
+									squares_dict[s][inc] = None
+									inc = prev[-1]
+									prev.pop()
+									break
+
+
 							# tries a number in every position
 							for y in range(len(columns_dict)):
 								if inc in columns[y]:
 									if returned == True:
-										if columns_dict[y][inc] == 9:
-											
-											columns_dict[c][inc] = None
-											rows_dict[r][inc] = None
-											squares_dict[s][inc] = None
-											try:
-												inc = prev[-1]
-												prev.pop()
-											except:
-												columns_dict[c][inc] = weird[weird_count]
-												rows_dict[r][inc] = weird[weird_count]
-												squares_dict[s][inc] = weird[weird_count]
-												weird_count += 1
-											leave = True
-											returned = True
-											break
 										ini = columns_dict[y][inc] + 1 
 										returned = False
 									columns_dict[y][inc] = ini
 									c = y
-							if leave == True:
-								leave = False
-								break
+							
 							for y in range(len(rows_dict)):
 
 								if inc in rows[y]:
 									rows_dict[y][inc] = ini
 									r=y
-							for y in range(len(rows_dict)):
+							for y in range(len(squares_dict)):
 								if inc in squares[y]:
 									squares_dict[y][inc] = ini
 									s=y
@@ -698,7 +692,7 @@ while run:
 								
 								ini += 1
 
-					if returned == True:
+					
 						
 					if returned != True and inc not in starting_nums: # keeping track of each previous position
 						
