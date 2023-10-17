@@ -30,7 +30,7 @@ leave = None # special case for backtracking, helps us avoid error
 
 dp = {} # value for every position (easier to navigate than coords)
 
-pected = [3, 2, 1, 2, 3, 2, 1, 2, 1] # how many given numbers for each square
+pected = [3, 2, 2, 2, 3, 2, 3, 2, 1] # how many given numbers for each square
 ex = pected[0] # initialising the amount of given positions for a square
 returned = None # if we are backtracking, this will change to True
 
@@ -64,9 +64,9 @@ def sample(l): # gives us the position for given nums
 		v = None
 		if clop == 9 and c == 1:
 			break
-		if clop == 7 and c == 1:
+		if clop == 7 and c == 3:
 			break
-		if clop == 3 and c == 1:
+		if clop == 3 and c == 2:
 			break
 		if c == 3 and clop == 1:
 			break
@@ -639,7 +639,7 @@ while run:
 								columns_dict[c][inc] = None
 								rows_dict[r][inc] = None
 								squares_dict[s][inc] = None
-								print(prev)
+								
 								inc = prev[-1]
 								prev.pop()
 								break
@@ -658,12 +658,17 @@ while run:
 									columns_dict[c][inc] = None
 									rows_dict[r][inc] = None
 									squares_dict[s][inc] = None
-									inc = prev[-1]
+									try:
+										inc = prev[-1]
+									except:
+										print("no solutions")
+										exit()
 									prev.pop()
+									stop = True
 									break
 
-
-							# tries a number in every position
+							
+							
 							for y in range(len(columns_dict)):
 								if inc in columns[y]:
 									if returned == True:
