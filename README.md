@@ -1,2 +1,3 @@
 # Solving-Sudoku-
-Self-solving sudoku made fully in python. I used backtracking to solve the sudoku. Visual changes will be made.
+First beginner project, so there are a lot of things that can be improved. Looking at my newer projects, improvements are clearly visible.
+Project was made using the backtracking algorithm.
