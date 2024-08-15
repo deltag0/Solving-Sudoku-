@@ -184,16 +184,16 @@ def violation(row,col,square): # checks if there is a violation after we place a
 # IMAGES
 
 
-white = pygame.image.load(r"white.png")
-one=pygame.image.load(r"1.png")
-two=pygame.image.load(r"2.png")
-three=pygame.image.load(r"3.png")
-four=pygame.image.load(r"4.png")
-five=pygame.image.load(r"5.png")
-six=pygame.image.load(r".png")
-seven=pygame.image.load(r"7.png")
-eight=pygame.image.load(r"8.png")
-nine=pygame.image.load(r"9.png")
+white = pygame.image.load(Path(__file__).with_name("white.png"))
+one=pygame.image.load(Path(__file__).with_name("1.png"))
+two=pygame.image.load(Path(__file__).with_name("2.png"))
+three=pygame.image.load(Path(__file__).with_name("3.png"))
+four=pygame.image.load(Path(__file__).with_name("4.png"))
+five=pygame.image.load(Path(__file__).with_name("5.png"))
+six=pygame.image.load(Path(__file__).with_name("6.png"))
+seven=pygame.image.load(Path(__file__).with_name("7.png"))
+eight=pygame.image.load(Path(__file__).with_name("8.png"))
+nine=pygame.image.load(Path(__file__).with_name("9.png"))
 
 white = pygame.transform.scale(white, (160,83))
 white_column = pygame.transform.scale(one, (160,1500))
